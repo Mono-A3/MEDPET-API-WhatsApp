@@ -3,12 +3,12 @@ import messageHandler from '../services/messageHandler.js';
 
 class WebhookController {
   async handleIncoming(req, res) {
-    const message = req.body.entry?.[0]?.changes[0]?.value?.message?.[0];
+    const message = req.body.entry?.[0]?.changes[0]?.value?.messages?.[0];
+    const senderInfo = req.body.entry?.[0]?.changes[0]?.value?.contacts?.[0];
 
     if (message) {
-      await messageHandler.handleIncomingMessage(message);
+      await messageHandler.handleIncomingMessage(message, senderInfo);
     }
-
     res.sendStatus(200);
   }
 
@@ -21,7 +21,7 @@ class WebhookController {
       res.status(200).send(challenge);
       console.log('Webhook verified successfully!');
     } else {
-      res.status(403);
+      res.sendStatus(403);
     }
   }
 }
